@@ -5,6 +5,7 @@ from pathlib import Path
 import yaml
 
 import pandas as pd
+import numpy as np
 import streamlit as st
 
 # File paths
@@ -15,6 +16,9 @@ CSV_FILES = [
 PKL_FILE = Path("food-com-recipes/ingr_map.pkl")
 CLEANED_RECIPES_CSV = Path("food-com-recipes/cleaned_recipes.csv")
 TAGS_FILE = Path("food-com-recipes/tags.yaml")
+
+# Set pd seed
+np.random.seed(42)
 
 # wide display
 st.set_page_config(layout="wide")
@@ -31,19 +35,20 @@ def save_first_50_lines_of_csv():
                     writer.writerow(next(reader))
 
 
-st.write("Importing data...")
-# save_first_50_lines_of_csv()
-raw_recipes = pd.read_csv(CSV_FILES[1])
-# pp_recipes = pd.read_csv(CSV_FILES[0])
-st.dataframe(raw_recipes.head(50))
+with st.spinner("Importing data..."):
+    # save_first_50_lines_of_csv()
+    raw_recipes_full = pd.read_csv(CSV_FILES[1])
+    raw_recipes = raw_recipes_full.head(10000).copy()
+    # pp_recipes = pd.read_csv(CSV_FILES[0])
+st.dataframe(raw_recipes.head(20))
 
 
 # ==============================================================================
 def split_nutrition(df):
     """Split the 'nutrition' column into individual components."""
 
-    # Split the 'nutrition' column into individual components
-    dest_cols = [
+    # Define individual components
+    nutririon_categories = [
         "calories",
         "total_fat_pdv",
         "sugar_pdv",
@@ -52,24 +57,24 @@ def split_nutrition(df):
         "saturated_fat_pdv",
         "carbohydrate_pdv",
     ]
-    df[dest_cols] = pd.DataFrame(
-        df["nutrition"].str.strip("[]").str.split(",").tolist(), dtype=float
-    )
+
+    # Split the nutrition column into individual columns
+    df[nutririon_categories] = pd.DataFrame(map(ast.literal_eval, df["nutrition"]))
+
     # Drop the original 'nutrition' column
-    # df = df.drop("nutrition", axis=1)
+    df = df.drop("nutrition", axis=1)
 
     return df
 
 
-st.write("Splitting nutrition...")
-recipes = split_nutrition(raw_recipes)
-st.dataframe(recipes.head(50))
+with st.spinner("Splitting nutrition..."):
+    recipes = split_nutrition(raw_recipes)
+st.dataframe(recipes.head(20))
 
 # df = raw_recipes["tags"]
 # df.to_csv("tags.csv")
 
 # ==============================================================================
-st.write("Separating Tags...")
 
 
 def load_tags(tags_file: Path) -> list:
@@ -80,53 +85,24 @@ def load_tags(tags_file: Path) -> list:
         """Compile a list of regex patterns into a single pattern."""
 
         combined_pattern = f"""
-            '
-            (
-                [^']*?
-                (?:
-                    {'|'.join(patterns)}
-                )
-                [^']*?
-            )
-            '
+            '                               # Match opening quote
+            (                               # Start capture group 1
+                [^']*?                      # Match anything but a quote
+                (?:                         # Start non-capturing group
+                    {'|'.join(patterns)}    # Match any of the patterns
+                )                           # End non-capturing group
+                [^']*?                      # Match anything but a quote
+            )                               # End capture group 1
+            '                               # Match closing quote
         """
 
-        return re.compile(combined_pattern, re.IGNORECASE)
+        return re.compile(combined_pattern, re.IGNORECASE | re.VERBOSE)
 
     return {k: compile_regex(v) for k, v in tags.items()}
 
 
 def process_tags(df: pd.DataFrame) -> pd.DataFrame:
     """Separate the 'tags' column into categories."""
-
-    # Define regex patterns for each category
-    TAG_PATTERNS = {
-        "cuisine": re.compile(
-            r"'italian|mexican|chinese|french|indian|american)[^']*?)'",
-            re.IGNORECASE,
-        ),
-        "time": re.compile(r"'([^']*?(?:minutes?|hours?)[^']*?)'", re.IGNORECASE),
-        "difficulty": re.compile(r"easy|medium|hard", re.IGNORECASE),
-        "season": re.compile(
-            r"'([^']*?(?:summer|winter|spring)[^']*?)'", re.IGNORECASE
-        ),
-        "equipment": re.compile(r"'([^']*?(?:grill|stove|oven)[^']*?)'", re.IGNORECASE),
-        "course": re.compile(
-            r"'([^']*?(?:main-dish|dessert|appetizer|side-dish|breakfast|lunch|dinner)[^']*?)'",
-            re.IGNORECASE,
-        ),
-        "dietary_restriction": re.compile(
-            r"'([^']*?(?:vegetarian|vegan|gluten-free|low-carb|low-fat)[^']*?)'",
-            re.IGNORECASE,
-        ),
-        "ingredient": re.compile(
-            r"'([^']*?(?:chicken|beef|pasta|tomato|cheese|bread|muffin)[^']*?)'",
-            re.IGNORECASE,
-        ),
-        "event": re.compile(
-            r"'([^']*?(?:christmas|thanksgiving|birthday|picnic)[^']*?)'", re.IGNORECASE
-        ),
-    }
 
     def find_category(category: str, df: pd.DataFrame) -> pd.DataFrame:
         """Find all tags that match the given category."""
@@ -156,13 +132,14 @@ def process_tags(df: pd.DataFrame) -> pd.DataFrame:
 
 # Run the function on the tags column
 TAG_PATTERNS = load_tags(TAGS_FILE)
-recipes = process_tags(recipes)
-st.dataframe(recipes.head(50))
+with st.spinner("Separating Tags..."):
+    recipes = process_tags(recipes)
+st.dataframe(recipes.head(20))
 recipes.to_csv(CLEANED_RECIPES_CSV)
 
 
 # Ingredient Mapping
 # ingr = pd.read_pickle(PKL_FILE)
-# st.dataframe(ingr.head(50))
+# st.dataframe(ingr.head(20))
 # st.write(ingr.shape)
 # st.write(ingr["id"].unique().shape)
