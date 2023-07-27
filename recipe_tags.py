@@ -1,9 +1,8 @@
-import re
 import ast
-import pandas as pd
-import numpy as np
-import streamlit as st
 from pathlib import Path
+
+import pandas as pd
+import streamlit as st
 import yaml
 
 RECIPE_FILE = Path("food-com-recipes/RAW_recipes.csv")
