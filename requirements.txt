@@ -1,0 +1,4 @@
+pandas
+gensim
+streamlit
+pyyaml

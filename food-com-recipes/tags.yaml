@@ -1,0 +1,113 @@
+cooking_method:
+  - unprocessed-freezer
+  - deep-fry
+  - water-bath
+  - roast
+course:
+  - desserts
+  - shakes
+  - middle-eastern-main-dish
+  - served-hot
+  - brunch
+  - lunch
+  - appetizers
+  - dinner
+  - breakfast
+cuisine:
+  - irish
+  - vietnamese
+  - greek
+  - swedish
+  - middle-eastern
+  - thai
+  - central-american
+  - hungarian
+  - turkish
+  - cuban
+  - german
+  - hawaiian
+  - tex-mex
+  - cajun
+  - italian
+  - mexican
+  - asian
+  - moroccan
+  - caribbean
+  - danish
+  - south-west-pacific
+  - australian
+  - american
+  - indian
+  - middle-eastern-main-dish
+  - french
+  - swiss
+  - chinese
+  - japanese
+  - english
+  - korean
+  - guatemalan
+  - portuguese
+  - spanish
+  - african
+  - russian
+  - canadian
+dietary_restrictions:
+  - gluten-free
+  - egg-free
+  - nut-free
+  - vegan
+  - vegetarian
+  - high-protein
+  - very-low-carbs
+  - dairy-free
+  - low-saturated-fat
+difficulty:
+  - easy
+dish:
+  - shakes
+  - unprocessed-freezer
+  - pizza
+  - rolled-cookies
+  - ravioli-tortellini
+  - served-hot
+  - soup
+  - scones
+equipment:
+  - unprocessed-freezer
+  - dehydrator
+  - stove-top
+  - oven
+event:
+  - easter
+  - christmas
+  - picnic
+  - birthday
+  - thanksgiving
+  - labor-day
+  - wedding
+key_ingredient:
+  - beef
+  - chicken
+  - unprocessed-freezer
+  - pitted-fruit
+  - bananas
+  - chocolate
+  - grapes
+  - savory-sauces
+  - bok-choys
+  - chicken-livers
+  - coconut
+  - artichoke
+  - clams
+  - kiwifruit
+  - turkey
+  - short-grain-rice
+  - onions
+season:
+  - summer
+  - spring
+  - winter
+  - fall
+time:
+  - hour
+  - minute
