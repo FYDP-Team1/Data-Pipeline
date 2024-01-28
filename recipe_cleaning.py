@@ -37,8 +37,9 @@ def save_first_50_lines_of_csv():
 
 with st.spinner("Importing data..."):
     # save_first_50_lines_of_csv()
-    raw_recipes_full = pd.read_csv(CSV_FILES[1])
-    raw_recipes = raw_recipes_full.head(10000).copy()
+    # raw_recipes_full = pd.read_csv(CSV_FILES[1])
+    # raw_recipes = raw_recipes_full.head(10000).copy()
+    raw_recipes = pd.read_csv(CSV_FILES[1])
     # pp_recipes = pd.read_csv(CSV_FILES[0])
 st.dataframe(raw_recipes.head(20))
 
@@ -143,3 +144,5 @@ recipes.to_csv(CLEANED_RECIPES_CSV)
 # st.dataframe(ingr.head(20))
 # st.write(ingr.shape)
 # st.write(ingr["id"].unique().shape)
+
+print("Done!")

@@ -36,9 +36,30 @@ with st.form(key="preferences_form"):
             label="Dietary Restrictions", options=tags["dietary_restrictions"]
         )
     )
-
     # Cuisine Dropdown
     cuisine = set(st.multiselect(label="Cuisine", options=tags["cuisine"]))
+    # Key Ingredient Dropdown
+    key_ingredient = set(
+        st.multiselect(label="Key Ingredient", options=tags["key_ingredient"])
+    )
+    # Time Dropdown
+    time = set(st.multiselect(label="Cooking Time", options=tags["time"]))
+    # Difficulty Dropdown
+    difficulty = set(st.multiselect(label="Difficulty", options=tags["difficulty"]))
+    # Equipment Dropdown
+    equipment = set(st.multiselect(label="Equipment", options=tags["equipment"]))
+    # Cooking Method Dropdown
+    cooking_method = set(
+        st.multiselect(label="Cooking Method", options=tags["cooking_method"])
+    )
+    # Course Dropdown
+    course = set(st.multiselect(label="Course", options=tags["course"]))
+    # Dish Dropdown
+    dish = set(st.multiselect(label="Dish", options=tags["dish"]))
+    # Season Dropdown
+    season = set(st.multiselect(label="Season", options=tags["season"]))
+    # Event Dropdown
+    event = set(st.multiselect(label="Event", options=tags["event"]))
 
     # Submit button
     submit_button = st.form_submit_button(label="Submit")
