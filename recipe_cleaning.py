@@ -5,7 +5,6 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-import streamlit as st
 import yaml
 
 # File paths
@@ -14,38 +13,21 @@ CSV_FILES = [
     Path("food-com-recipes/RAW_recipes.csv"),
 ]
 PKL_FILE = Path("food-com-recipes/ingr_map.pkl")
-CLEANED_RECIPES_CSV = Path("food-com-recipes/cleaned_recipes.csv")
+CLEANED_RECIPES_CSV = Path("data/cleaned_recipes.csv")
 TAGS_FILE = Path("food-com-recipes/tags.yaml")
 
 # Set pd seed
 np.random.seed(42)
 
-# wide display
-st.set_page_config(layout="wide")
-
-
-# Load the csv files and save the top 50 rows into a new CSV file
-def save_first_50_lines_of_csv():
-    for csv_file in CSV_FILES:
-        with csv_file.open("r") as f:
-            reader = csv.reader(f)
-            with Path(csv_file.stem + "_first50.csv").open("w") as f1:
-                writer = csv.writer(f1)
-                for i in range(50):
-                    writer.writerow(next(reader))
-
-
-with st.spinner("Importing data..."):
-    # save_first_50_lines_of_csv()
-    # raw_recipes_full = pd.read_csv(CSV_FILES[1])
-    # raw_recipes = raw_recipes_full.head(10000).copy()
-    raw_recipes = pd.read_csv(CSV_FILES[1])
-    # pp_recipes = pd.read_csv(CSV_FILES[0])
-st.dataframe(raw_recipes.head(20))
+raw_recipes = pd.read_csv(CSV_FILES[1])
+print(f"Num Raw Recipes: {raw_recipes.shape}")
+# pp_recipes = pd.read_csv(CSV_FILES[0])
+# print(f"Num PP Recipes: {pp_recipes.shape}")
 
 
 # ==============================================================================
 def split_nutrition(df):
+    print("Splitting Nutrition column")
     """Split the 'nutrition' column into individual components."""
 
     # Define individual components
@@ -68,18 +50,13 @@ def split_nutrition(df):
     return df
 
 
-with st.spinner("Splitting nutrition..."):
-    recipes = split_nutrition(raw_recipes)
-st.dataframe(recipes.head(20))
-
-# df = raw_recipes["tags"]
-# df.to_csv("tags.csv")
-
+recipes = split_nutrition(raw_recipes)
 # ==============================================================================
 
 
 def load_tags(tags_file: Path) -> list:
     """Load the tags from the yaml file."""
+    print("Loading tags...")
     tags = yaml.safe_load(tags_file.open("r"))
 
     def compile_regex(patterns: list) -> re.Pattern:
@@ -104,6 +81,7 @@ def load_tags(tags_file: Path) -> list:
 
 def process_tags(df: pd.DataFrame) -> pd.DataFrame:
     """Separate the 'tags' column into categories."""
+    print("Processing tags...")
 
     def find_category(category: str, df: pd.DataFrame) -> pd.DataFrame:
         """Find all tags that match the given category."""
@@ -133,16 +111,14 @@ def process_tags(df: pd.DataFrame) -> pd.DataFrame:
 
 # Run the function on the tags column
 TAG_PATTERNS = load_tags(TAGS_FILE)
-with st.spinner("Separating Tags..."):
-    recipes = process_tags(recipes)
-st.dataframe(recipes.head(20))
+recipes = process_tags(recipes)
+
+# Save the cleaned recipes
+print(f"Num Cleaned Recipes: {recipes.shape}")
 recipes.to_csv(CLEANED_RECIPES_CSV)
 
-
 # Ingredient Mapping
-# ingr = pd.read_pickle(PKL_FILE)
-# st.dataframe(ingr.head(20))
-# st.write(ingr.shape)
-# st.write(ingr["id"].unique().shape)
+ingr = pd.read_pickle(PKL_FILE)
+print(f"Num Ingr: {ingr['id'].unique().shape}")
 
 print("Done!")
