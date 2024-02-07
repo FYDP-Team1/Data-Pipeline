@@ -161,3 +161,4 @@ cython_debug/
 
 *.zip
 /food-com-recipes/
+*.docx

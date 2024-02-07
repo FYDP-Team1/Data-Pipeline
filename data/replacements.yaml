@@ -67,6 +67,10 @@ pork:
   - bacon
   - ham
   - pork-chops
+  - pork-ribs
+burgers:
+  - turkey-burgers
+  - veggie-burgers
 fish:
   - shellfish
   - cod
