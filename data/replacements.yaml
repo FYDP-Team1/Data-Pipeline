@@ -1,0 +1,138 @@
+fruit:
+  - coconut
+  - papaya
+  - avocado
+  - bananas
+  - peaches
+  - grapes
+  - pears
+  - mango
+  - lime
+  - melons
+  - kiwifruit
+  - apples
+  - lemon
+  - plums
+  - oranges
+berries:
+  - strawberries
+  - raspberries
+  - blueberries
+  - blackberries
+  - cranberries
+vegetables:
+  - pumpkin
+  - zucchini
+  - artichoke
+  - tomatoes
+  - green-yellow-beans
+  - onions
+  - peppers
+  - carrots
+  - asparagus
+  - spinach
+  - cabbage
+  - greens
+  - lettuces
+  - broccoli
+  - cauliflower
+  - eggplant
+  - mushrooms
+  - corn
+  - squash
+rice:
+  - brown-rice
+grain:
+  - oatmeal
+chicken:
+  - chicken-breasts
+  - main-dish-chicken
+  - whole-chicken
+shrimp:
+  - shrimp-main-dish
+  - gumbo
+lamb:
+  - lamb-sheep-main-dish
+beef:
+  - beef-ribs
+  - roast-beef
+  - roast-beef-main-dish
+  - roast-beef-comfort-food
+beans:
+  - black-beans
+  - chick-peas-garbanzos
+  - beans-side-dishes
+  - baked-beans
+pork:
+  - bacon
+  - ham
+  - pork-chops
+fish:
+  - shellfish
+  - cod
+  - trout
+  - freshwater-fish
+  - tuna
+  - catfish
+  - whitefish
+  - salmon
+pasta:
+  - spaghetti
+  - main-dish-pasta
+  - manicotti
+  - macaroni-and-cheese
+  - ravioli-tortellini
+  - lasagna
+  - pasta-elbow-macaroni
+  - spaghetti-sauce
+  - marinara-sauce
+soup:
+  - bean-soup
+  - black-bean-soup
+  - clear-soups
+  - bisques-cream-soups
+  - mushroom-soup
+  - ham-and-bean-soup
+  - chowders
+beverages:
+  - smoothies
+  - punch
+  - shakes
+stews:
+  - stews-poultry
+  - chicken-stews
+breads:
+  - quick-breads
+  - biscotti
+  - sourdough
+  - pumpkin-bread
+frozen-desserts:
+  - ice-cream
+pies:
+  - savory-pies
+  - pot-pie
+potatoes:
+  - mashed-potatoes
+  - yams-sweet-potatoes
+sweet:
+  - snacks-sweet
+  - chocolate-chip-cookies
+  - tarts
+  - brownies
+  - granola-and-porridge
+  - desserts-fruit
+  - cakes
+  - coffee-cakes
+  - cake-fillings-and-frostings
+  - cheesecake
+  - bread-pudding
+  - cupcakes
+  - halloween-cupcakes
+  - candy
+  - puddings-and-mousses
+  - fudge
+  - scones
+  - cookies-and-brownies
+  - rolled-cookies
+  - cobblers-and-crisps
+  - muffins
