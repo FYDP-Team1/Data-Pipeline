@@ -160,3 +160,4 @@ cython_debug/
 #.idea/
 
 *.zip
+/food-com-recipes/
