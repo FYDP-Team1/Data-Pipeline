@@ -14,7 +14,8 @@ CSV_FILES = [
 ]
 PKL_FILE = Path("food-com-recipes/ingr_map.pkl")
 CLEANED_RECIPES_CSV = Path("data/cleaned_recipes.csv")
-TAGS_FILE = Path("food-com-recipes/tags.yaml")
+TAGS_FILE = Path("data/tags.yaml")
+TAG_REPLACEMENTS_FILE = Path("data/replacements.yaml")
 
 # Set pd seed
 np.random.seed(42)
@@ -54,7 +55,7 @@ recipes = split_nutrition(raw_recipes)
 # ==============================================================================
 
 
-def load_tags(tags_file: Path) -> list:
+def load_tags(tags_file: Path) -> dict[str, list]:
     """Load the tags from the yaml file."""
     print("Loading tags...")
     tags = yaml.safe_load(tags_file.open("r"))
@@ -83,6 +84,9 @@ def process_tags(df: pd.DataFrame) -> pd.DataFrame:
     """Separate the 'tags' column into categories."""
     print("Processing tags...")
 
+    replacements = yaml.safe_load(TAG_REPLACEMENTS_FILE.open("r"))
+    replacement_map = {item: cat for cat, lst in replacements.items() for item in lst}
+
     def find_category(category: str, df: pd.DataFrame) -> pd.DataFrame:
         """Find all tags that match the given category."""
         # Initialize new column
@@ -92,7 +96,8 @@ def process_tags(df: pd.DataFrame) -> pd.DataFrame:
             row = []
 
             for match in TAG_PATTERNS[category].finditer(tag):
-                row.append(match.group(1))
+                replaced_tag = replacement_map.get(match.group(1), match.group(1))
+                row.append(replaced_tag)
 
             column.append(row)
 
