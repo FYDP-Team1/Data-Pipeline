@@ -115,8 +115,8 @@ def process_tags(df: pd.DataFrame) -> pd.DataFrame:
 if __name__ == "__main__":
     raw_recipes = pd.read_csv(CSV_FILES[1])
     print(f"Num Raw Recipes: {raw_recipes.shape}")
-    pp_recipes = pd.read_csv(CSV_FILES[0])
-    print(f"Num PP Recipes: {pp_recipes.shape}")
+    # pp_recipes = pd.read_csv(CSV_FILES[0])
+    # print(f"Num PP Recipes: {pp_recipes.shape}")
 
     # Clean the recipes
     recipes = split_nutrition(raw_recipes)
@@ -127,10 +127,11 @@ if __name__ == "__main__":
 
     # Save the cleaned recipes
     print(f"Num Cleaned Recipes: {recipes.shape}")
+    # recipes.to_csv(CLEANED_RECIPES_CSV)
     recipes.to_csv(CLEANED_RECIPES_CSV)
 
     # Ingredient Mapping
-    ingr = pd.read_pickle(PKL_FILE)
-    print(f"Num Ingr: {ingr['id'].unique().shape}")
+    # ingr = pd.read_pickle(PKL_FILE)
+    # print(f"Num Ingr: {ingr['id'].unique().shape}")
 
     print("Done!")
