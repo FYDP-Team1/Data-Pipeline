@@ -1,9 +1,7 @@
 import ast
-import csv
 import re
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 import yaml
 
@@ -17,16 +15,9 @@ CLEANED_RECIPES_CSV = Path("data/cleaned_recipes.csv")
 TAGS_FILE = Path("data/tags.yaml")
 TAG_REPLACEMENTS_FILE = Path("data/replacements.yaml")
 
-# Set pd seed
-np.random.seed(42)
-
-raw_recipes = pd.read_csv(CSV_FILES[1])
-print(f"Num Raw Recipes: {raw_recipes.shape}")
-# pp_recipes = pd.read_csv(CSV_FILES[0])
-# print(f"Num PP Recipes: {pp_recipes.shape}")
-
-
 # ==============================================================================
+
+
 def split_nutrition(df):
     print("Splitting Nutrition column")
     """Split the 'nutrition' column into individual components."""
@@ -51,7 +42,6 @@ def split_nutrition(df):
     return df
 
 
-recipes = split_nutrition(raw_recipes)
 # ==============================================================================
 
 
@@ -111,19 +101,36 @@ def process_tags(df: pd.DataFrame) -> pd.DataFrame:
         df = find_category(category, df)
         print(f"{category} found.")
 
+    # Remove rows that have not been assigned any tags in the category columns
+    print("Removing rows with no tags...")
+    category_columns = TAG_PATTERNS.keys()
+    df = df[df[category_columns].apply(any, axis=1)]
+    print("Rows removed.")
+
     return df
 
 
-# Run the function on the tags column
-TAG_PATTERNS = load_tags(TAGS_FILE)
-recipes = process_tags(recipes)
+# ==============================================================================
 
-# Save the cleaned recipes
-print(f"Num Cleaned Recipes: {recipes.shape}")
-recipes.to_csv(CLEANED_RECIPES_CSV)
+if __name__ == "__main__":
+    raw_recipes = pd.read_csv(CSV_FILES[1])
+    print(f"Num Raw Recipes: {raw_recipes.shape}")
+    pp_recipes = pd.read_csv(CSV_FILES[0])
+    print(f"Num PP Recipes: {pp_recipes.shape}")
 
-# Ingredient Mapping
-ingr = pd.read_pickle(PKL_FILE)
-print(f"Num Ingr: {ingr['id'].unique().shape}")
+    # Clean the recipes
+    recipes = split_nutrition(raw_recipes)
 
-print("Done!")
+    # Run the function on the tags column
+    TAG_PATTERNS = load_tags(TAGS_FILE)
+    recipes = process_tags(recipes)
+
+    # Save the cleaned recipes
+    print(f"Num Cleaned Recipes: {recipes.shape}")
+    recipes.to_csv(CLEANED_RECIPES_CSV)
+
+    # Ingredient Mapping
+    ingr = pd.read_pickle(PKL_FILE)
+    print(f"Num Ingr: {ingr['id'].unique().shape}")
+
+    print("Done!")
