@@ -1,4 +1,5 @@
 pandas
+polars
 gensim
 streamlit
 pyyaml

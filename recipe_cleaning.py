@@ -1,8 +1,7 @@
 import ast
-import re
 from pathlib import Path
 
-import pandas as pd
+import polars as pl
 import yaml
 
 # File paths
@@ -18,12 +17,12 @@ TAG_REPLACEMENTS_FILE = Path("data/replacements.yaml")
 # ==============================================================================
 
 
-def split_nutrition(df):
+def split_nutrition(df: pl.DataFrame):
     print("Splitting Nutrition column")
     """Split the 'nutrition' column into individual components."""
 
     # Define individual components
-    nutririon_categories = [
+    nutrition_categories = [
         "calories",
         "total_fat_pdv",
         "sugar_pdv",
@@ -34,10 +33,10 @@ def split_nutrition(df):
     ]
 
     # Split the nutrition column into individual columns
-    df[nutririon_categories] = pd.DataFrame(map(ast.literal_eval, df["nutrition"]))
+    df[nutrition_categories] = pl.DataFrame(map(ast.literal_eval, df["nutrition"]))
 
     # Drop the original 'nutrition' column
-    df = df.drop("nutrition", axis=1)
+    df = df.drop("nutrition")
 
     return df
 
@@ -45,93 +44,96 @@ def split_nutrition(df):
 # ==============================================================================
 
 
-def load_tags(tags_file: Path) -> dict[str, list]:
+def load_tags():
     """Load the tags from the yaml file."""
     print("Loading tags...")
-    tags = yaml.safe_load(tags_file.open("r"))
-
-    def compile_regex(patterns: list) -> re.Pattern:
-        """Compile a list of regex patterns into a single pattern."""
-
-        combined_pattern = f"""
-            '                               # Match opening quote
-            (                               # Start capture group 1
-                [^']*?                      # Match anything but a quote
-                (?:                         # Start non-capturing group
-                    {'|'.join(patterns)}    # Match any of the patterns
-                )                           # End non-capturing group
-                [^']*?                      # Match anything but a quote
-            )                               # End capture group 1
-            '                               # Match closing quote
-        """
-
-        return re.compile(combined_pattern, re.IGNORECASE | re.VERBOSE)
-
-    return {k: compile_regex(v) for k, v in tags.items()}
+    tags = yaml.safe_load(TAGS_FILE.open("r"))
+    return tags
 
 
-def process_tags(df: pd.DataFrame) -> pd.DataFrame:
+def process_tags(df: pl.DataFrame, tag_patterns: dict[str, list[str]]):
     """Separate the 'tags' column into categories."""
     print("Processing tags...")
 
     replacements = yaml.safe_load(TAG_REPLACEMENTS_FILE.open("r"))
     replacement_map = {item: cat for cat, lst in replacements.items() for item in lst}
 
-    def find_category(category: str, df: pd.DataFrame) -> pd.DataFrame:
+    def find_category(pattern: list[str], df: pl.DataFrame):
         """Find all tags that match the given category."""
         # Initialize new column
         column = []
         # Check each tag against each regex pattern
         for tag in df["tags"]:
-            row = []
+            tag = ast.literal_eval(tag)
 
-            for match in TAG_PATTERNS[category].finditer(tag):
-                replaced_tag = replacement_map.get(match.group(1), match.group(1))
-                row.append(replaced_tag)
+            row = [
+                replacement_map.get(match, match) for match in pattern if match in tag
+            ]
 
-            column.append(row)
+            column.append(",".join(row) if row else None)
 
-        df[category] = column
-        return df
+        return df.with_columns(pl.Series(category, column))
 
     print("Category function defined.")
 
-    for category in TAG_PATTERNS.keys():
+    # Remove recipes with unwanted cuisines and courses
+    for category in ["cuisine", "course"]:
         print(f"Finding {category}...")
-        df = find_category(category, df)
+        df = find_category(tag_patterns[category], df)
+        df = df.filter(pl.col(category).is_not_null())
+        print(f"{category} found.")
+
+    for category, pattern in tag_patterns.items():
+        if category in ["cuisine", "course"]:
+            continue
+
+        print(f"Finding {category}...")
+        df = find_category(pattern, df)
         print(f"{category} found.")
 
     # Remove rows that have not been assigned any tags in the category columns
-    print("Removing rows with no tags...")
-    category_columns = TAG_PATTERNS.keys()
-    df = df[df[category_columns].apply(any, axis=1)]
+    print("Removing rows with no assigned tags...")
+    category_columns = tag_patterns.keys()
+    df = df.filter(~pl.all_horizontal(pl.col(category_columns).is_null()))
     print("Rows removed.")
+
+    # Remove the original 'tags' column
+    df = df.drop("tags")
 
     return df
 
 
 # ==============================================================================
 
+
 if __name__ == "__main__":
-    raw_recipes = pd.read_csv(CSV_FILES[1])
-    print(f"Num Raw Recipes: {raw_recipes.shape}")
-    # pp_recipes = pd.read_csv(CSV_FILES[0])
-    # print(f"Num PP Recipes: {pp_recipes.shape}")
+    recipes = pl.scan_csv(CSV_FILES[1]).drop(["contributor_id", "submitted"]).collect()
+    print(f"Raw Recipes: {recipes.shape}")
 
     # Clean the recipes
-    recipes = split_nutrition(raw_recipes)
+    tag_patterns = load_tags()
+    recipes = process_tags(recipes, tag_patterns)
+    recipes = split_nutrition(recipes)
+    print(f"Cleaned Recipes: {recipes.shape}")
 
-    # Run the function on the tags column
-    TAG_PATTERNS = load_tags(TAGS_FILE)
-    recipes = process_tags(recipes)
+    sampled_recipes = pl.DataFrame(None, schema=recipes.schema)
+    for cuisine, grp in recipes.group_by("cuisine"):
+        if grp.shape[0] < 50:
+            sample = grp
+        else:
+            sample = grp.sample(n=50, seed=40404, with_replacement=False)
+        sampled_recipes = sampled_recipes.vstack(sample)
+    recipes = sampled_recipes.sample(
+        n=200,
+        seed=40404,
+        with_replacement=False,
+        shuffle=True,
+    )
+    for cuisine, grp in recipes.group_by("cuisine"):
+        print(f"{cuisine}: {grp.shape}")
 
-    # Save the cleaned recipes
-    print(f"Num Cleaned Recipes: {recipes.shape}")
-    # recipes.to_csv(CLEANED_RECIPES_CSV)
-    recipes.to_csv(CLEANED_RECIPES_CSV)
-
-    # Ingredient Mapping
-    # ingr = pd.read_pickle(PKL_FILE)
-    # print(f"Num Ingr: {ingr['id'].unique().shape}")
+    # Save the recipes
+    print(f"Sampled Recipes: {recipes.shape}")
+    recipes.write_csv(CLEANED_RECIPES_CSV)
 
     print("Done!")
