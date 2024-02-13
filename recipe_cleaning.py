@@ -103,8 +103,32 @@ def process_tags(df: pl.DataFrame, tag_patterns: dict[str, list[str]]):
 # ==============================================================================
 
 
+def sample_recipes(sampled_recipes: pl.DataFrame):
+    sampled_cuisines = pl.DataFrame(None, schema=sampled_recipes.schema)
+    for cuisine, grp in sampled_recipes.group_by("cuisine"):
+        if grp.shape[0] < 50:
+            sample = grp
+        else:
+            sample = grp.sample(n=50, seed=40404, with_replacement=False)
+        sampled_cuisines = sampled_cuisines.vstack(sample)
+    sampled_recipes = sampled_cuisines.sample(
+        n=200,
+        seed=40404,
+        with_replacement=False,
+        shuffle=True,
+    )
+    for cuisine, grp in sampled_recipes.group_by("cuisine"):
+        print(f"{cuisine}: {grp.shape}")
+    return sampled_recipes
+
+
+# ==============================================================================
+
+
 if __name__ == "__main__":
-    recipes = pl.scan_csv(RAW_RECIPES_FILES).drop(["contributor_id", "submitted"]).collect()
+    recipes = (
+        pl.scan_csv(RAW_RECIPES_FILES).drop(["contributor_id", "submitted"]).collect()
+    )
     print(f"Raw Recipes: {recipes.shape}")
 
     # Clean the recipes
@@ -113,21 +137,7 @@ if __name__ == "__main__":
     recipes = split_nutrition(recipes)
     print(f"Cleaned Recipes: {recipes.shape}")
 
-    sampled_recipes = pl.DataFrame(None, schema=recipes.schema)
-    for cuisine, grp in recipes.group_by("cuisine"):
-        if grp.shape[0] < 50:
-            sample = grp
-        else:
-            sample = grp.sample(n=50, seed=40404, with_replacement=False)
-        sampled_recipes = sampled_recipes.vstack(sample)
-    recipes = sampled_recipes.sample(
-        n=200,
-        seed=40404,
-        with_replacement=False,
-        shuffle=True,
-    )
-    for cuisine, grp in recipes.group_by("cuisine"):
-        print(f"{cuisine}: {grp.shape}")
+    recipes = sample_recipes(recipes)
 
     # Save the recipes
     print(f"Sampled Recipes: {recipes.shape}")
