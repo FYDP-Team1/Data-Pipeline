@@ -5,12 +5,9 @@ import polars as pl
 import yaml
 
 # File paths
-CSV_FILES = [
-    Path("food-com-recipes/PP_recipes.csv"),
-    Path("food-com-recipes/RAW_recipes.csv"),
-]
-PKL_FILE = Path("food-com-recipes/ingr_map.pkl")
+RAW_RECIPES_FILES =    Path("food-com-recipes/RAW_recipes.csv")
 CLEANED_RECIPES_CSV = Path("data/cleaned_recipes.csv")
+
 TAGS_FILE = Path("data/tags.yaml")
 TAG_REPLACEMENTS_FILE = Path("data/replacements.yaml")
 
@@ -107,7 +104,7 @@ def process_tags(df: pl.DataFrame, tag_patterns: dict[str, list[str]]):
 
 
 if __name__ == "__main__":
-    recipes = pl.scan_csv(CSV_FILES[1]).drop(["contributor_id", "submitted"]).collect()
+    recipes = pl.scan_csv(RAW_RECIPES_FILES).drop(["contributor_id", "submitted"]).collect()
     print(f"Raw Recipes: {recipes.shape}")
 
     # Clean the recipes
