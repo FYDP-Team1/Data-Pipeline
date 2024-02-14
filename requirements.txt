@@ -4,3 +4,4 @@ gensim
 streamlit
 pyyaml
 python-docx
+beautifulsoup4
