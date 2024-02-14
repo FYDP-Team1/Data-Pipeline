@@ -3,7 +3,8 @@ from docx import Document
 import yaml
 import re
 
-TAGS_FILE = Path("data/tags.yaml")
+TAGS_IN_FILE = Path("data/all_tags.yaml")
+TAGS_OUT_FILE = Path("data/tags.yaml")
 REPLACEMENTS_FILE = Path("data/replacements.yaml")
 
 remove_leading_spaces_and_hyphens = re.compile(r"^\s*-\s*")
@@ -26,7 +27,7 @@ def extract_strikethrough_text(doc_path):
 strikethrough_tags = extract_strikethrough_text("data/Tags Categorization.docx")
 
 # Load the YAML file
-data = yaml.safe_load(TAGS_FILE.open("r"))
+data = yaml.safe_load(TAGS_IN_FILE.open("r"))
 
 # Remove strikethrough tags
 cleaned_data = {
@@ -46,4 +47,4 @@ for replace, find_list in replacements.items():
 filtered_data = {k: sorted(set(v)) for k, v in cleaned_data.items()}
 
 # Write the cleaned data back to the YAML file
-yaml.dump(filtered_data, TAGS_FILE.open("w"))
+yaml.dump(filtered_data, TAGS_OUT_FILE.open("w"))

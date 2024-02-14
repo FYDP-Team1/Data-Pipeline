@@ -6,7 +6,7 @@ import yaml
 
 # File paths
 RAW_RECIPES_FILES = Path("food-com-recipes/RAW_recipes.csv")
-CLEANED_RECIPES_CSV = Path("data/cleaned_recipes.csv")
+CLEANED_RECIPES_CSV = Path("data/recipes-1.csv")
 
 TAGS_FILE = Path("data/tags.yaml")
 TAG_REPLACEMENTS_FILE = Path("data/replacements.yaml")

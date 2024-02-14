@@ -9,8 +9,8 @@ from statistics import mean
 
 from mixed_fractions import Mixed
 
-CLEANED_RECIPES_CSV = Path("data/cleaned_recipes.csv")
-INGREDIENTS_CSV = Path("data/recipes_ingredients.csv")
+CLEANED_RECIPES_CSV = Path("data/recipes-1.csv")
+INGREDIENTS_CSV = Path("data/ingredients-1.csv")
 
 
 def recipe_link(name, r_id):

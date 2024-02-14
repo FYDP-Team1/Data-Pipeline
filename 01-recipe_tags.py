@@ -6,7 +6,7 @@ import streamlit as st
 import yaml
 
 RECIPE_FILE = Path("food-com-recipes/RAW_recipes.csv")
-TAGS_FILE = Path("food-com-recipes/tags.yaml")
+TAGS_FILE = Path("food-com-recipes/all_tags.yaml")
 
 # wide display
 st.set_page_config(layout="wide")
