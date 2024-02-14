@@ -5,7 +5,7 @@ import polars as pl
 import yaml
 
 # File paths
-RAW_RECIPES_FILES =    Path("food-com-recipes/RAW_recipes.csv")
+RAW_RECIPES_FILES = Path("food-com-recipes/RAW_recipes.csv")
 CLEANED_RECIPES_CSV = Path("data/cleaned_recipes.csv")
 
 TAGS_FILE = Path("data/tags.yaml")
@@ -127,7 +127,9 @@ def sample_recipes(sampled_recipes: pl.DataFrame):
 
 if __name__ == "__main__":
     recipes = (
-        pl.scan_csv(RAW_RECIPES_FILES).drop(["contributor_id", "submitted"]).collect()
+        pl.scan_csv(RAW_RECIPES_FILES)
+        .drop(["contributor_id", "submitted", "ingredients"])
+        .collect()
     )
     print(f"Raw Recipes: {recipes.shape}")
 
