@@ -1,11 +1,13 @@
+import json
+import re
 from pathlib import Path
 
 import polars as pl
 import requests
 from bs4 import BeautifulSoup
-import re
-from fractions import Fraction
-import json
+from statistics import mean
+
+from mixed_fractions import Mixed
 
 CLEANED_RECIPES_CSV = Path("data/cleaned_recipes.csv")
 INGREDIENTS_CSV = Path("data/recipes_ingredients.csv")
@@ -23,12 +25,20 @@ def clean_text(text):
 
 
 def clean_quantity(text):
+    if text == "":
+        return ""
+
+    def fraction_to_float(text):
+        text = text.replace("⁄", "/")  # Replace special character with '/'
+        return float(Mixed(text))
+
     text = re.sub(r"\s+", " ", text.strip())
-    text = text.replace("⁄", "/")  # Replace special character with '/'
-    try:
-        return str(float(Fraction(text)))
-    except ValueError:
-        return f"ERROR: {text}"
+    if "-" in text:
+        text = text.split("-")
+        number = mean([fraction_to_float(t) for t in text])
+    else:
+        number = fraction_to_float(text)
+    return number
 
 
 def scrape_ingredients(url):
@@ -64,4 +74,4 @@ if __name__ == "__main__":
     )
 
     print("Saving...")
-    recipes.write_csv(INGREDIENTS_CSV)
+    recipes.sort("id").write_csv(INGREDIENTS_CSV)
