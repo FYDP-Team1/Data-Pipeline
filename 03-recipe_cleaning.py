@@ -103,6 +103,23 @@ def process_tags(df: pl.DataFrame, tag_patterns: dict[str, list[str]]):
 # ==============================================================================
 
 
+def clean_recipe_text(df: pl.DataFrame):
+    """Clean the text columns: name, description, steps"""
+
+    # Remove extra spaces and newlines
+    # Escape double quotes
+    return df.with_columns(
+        pl.col("name").str.replace_all(r"\s+", " ").str.replace_all('"', "'"),
+        pl.col("description")
+        .str.replace_all(r"[\n\s]+", " ")
+        .str.replace_all('"', "'"),
+        pl.col("steps").str.replace_all(r"\s+", " ").str.replace_all('"', "'"),
+    )
+
+
+# ==============================================================================
+
+
 def sample_recipes(sampled_recipes: pl.DataFrame):
     sampled_cuisines = pl.DataFrame(None, schema=sampled_recipes.schema)
     for cuisine, grp in sampled_recipes.group_by("cuisine"):
@@ -134,13 +151,15 @@ if __name__ == "__main__":
     # Clean the recipes
     tag_patterns = load_tags()
     recipes = process_tags(recipes, tag_patterns)
-    recipes = split_nutrition(recipes)
     print(f"Cleaned Recipes: {recipes.shape}")
 
     recipes = sample_recipes(recipes)
+    print(f"Sampled Recipes: {recipes.shape}")
+
+    recipes = split_nutrition(recipes)
+    recipes = clean_recipe_text(recipes)
 
     # Save the recipes
-    print(f"Sampled Recipes: {recipes.shape}")
     recipes.write_csv(CLEANED_RECIPES_CSV)
 
     print("Done!")
