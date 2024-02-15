@@ -127,9 +127,7 @@ def sample_recipes(sampled_recipes: pl.DataFrame):
 
 if __name__ == "__main__":
     recipes = (
-        pl.scan_csv(RAW_RECIPES_FILES)
-        .drop(["contributor_id", "submitted", "ingredients"])
-        .collect()
+        pl.scan_csv(RAW_RECIPES_FILES).drop(["contributor_id", "submitted"]).collect()
     )
     print(f"Raw Recipes: {recipes.shape}")
 
