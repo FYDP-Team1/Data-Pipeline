@@ -55,33 +55,39 @@ def get_recipes_table(recipes: pl.DataFrame) -> dict[str, pl.DataFrame]:
     return {"recipes": df}
 
 
-def get_cuisines_table(
-    recipes: pl.DataFrame, category: str, association: str
+def get_category_table(
+    recipes: pl.DataFrame,
+    *,
+    df_category: str,
+    category_table_name: str,
+    association_table_name: str,
+    association_id: str,
 ) -> dict[str, pl.DataFrame | dict]:
     """Create the category and recipe_category tables."""
 
     category_df = recipes.select(
-        pl.col(category)
+        pl.col(df_category)
         .map_elements(lambda x: x.split(","), strategy="threading")
         .explode()
+        .alias("name")
     ).unique()
     category_df = category_df.with_row_index("id", offset=1)
 
     cat_dict = category_df.to_dict(as_series=False)
-    recipe_dict = recipes.select(pl.col("id"), pl.col(category)).to_dicts()
+    recipe_dict = recipes.select(pl.col("id"), pl.col(df_category)).to_dicts()
     recipe_category = [
         {
-            f"{category}_id": c_id,
+            f"{association_id}": c_id,
             "recipe_id": recipe["id"],
         }
-        for c_id, cat in zip(cat_dict["id"], cat_dict[category])
+        for c_id, cat in zip(cat_dict["id"], cat_dict["name"])
         for recipe in recipe_dict
-        if cat and recipe[category] and cat in recipe[category]
+        if cat and recipe[df_category] and cat in recipe[df_category]
     ]
 
     return {
-        category: category_df,
-        association: recipe_category,
+        category_table_name: category_df,
+        association_table_name: recipe_category,
     }
 
 
@@ -115,9 +121,23 @@ if __name__ == "__main__":
     #   Dependant tables: recipe_ingredients, recipe_cuisines, recipe_restrictions
     database = {}
     database.update(get_recipes_table(recipes))
-    database.update(get_cuisines_table(recipes, "cuisine", "recipe_cuisines"))
     database.update(
-        get_cuisines_table(recipes, "dietary_restrictions", "recipe_restrictions")
+        get_category_table(
+            recipes,
+            df_category="cuisine",
+            category_table_name="cuisines",
+            association_table_name="recipe_cuisines",
+            association_id="cuisine_id",
+        )
+    )
+    database.update(
+        get_category_table(
+            recipes,
+            df_category="dietary_restrictions",
+            category_table_name="dietary_restrictions",
+            association_table_name="recipe_restrictions",
+            association_id="restriction_id",
+        )
     )
 
     # Write the SQL file
@@ -125,5 +145,5 @@ if __name__ == "__main__":
         for table, data in database.items():
             file.write(f"-- {table} table\n")
             write_sql(data, table, file)
-            file.write("\n\n")
+            file.write("\n")
     print("SQL file written.")
