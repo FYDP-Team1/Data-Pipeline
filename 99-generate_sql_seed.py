@@ -91,6 +91,18 @@ def get_category_table(
     }
 
 
+def clean_data(s) -> str:
+    """Convert the row value to a string."""
+    if s is None:
+        return "''"
+
+    if isinstance(s, str):
+        s = s.replace("'", "''")
+        return f"'{s}'"
+
+    return str(s)
+
+
 def write_sql(data: pl.DataFrame | list, table_name: str, file: TextIOWrapper):
     """Write the data to a SQL init file."""
     print(f"Writing table {table_name}...")
@@ -106,7 +118,7 @@ def write_sql(data: pl.DataFrame | list, table_name: str, file: TextIOWrapper):
 
     cols_string = ", ".join(cols)
     for row in iterator:
-        vals_string = ", ".join([f'"{str(row[col])}"' for col in cols])
+        vals_string = ", ".join([clean_data(row[col]) for col in cols])
         file.write(
             f"INSERT INTO {table_name} ({cols_string}) VALUES ({vals_string});\n"
         )
@@ -141,7 +153,7 @@ if __name__ == "__main__":
     )
 
     # Write the SQL file
-    with SQL_FILE.open("w") as file:
+    with SQL_FILE.open("w", encoding="UTF-8") as file:
         for table, data in database.items():
             file.write(f"-- {table} table\n")
             write_sql(data, table, file)
