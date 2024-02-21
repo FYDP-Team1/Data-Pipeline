@@ -70,6 +70,7 @@ def get_category_table(
         .map_elements(lambda x: x.split(","), strategy="threading")
         .explode()
         .alias("name")
+        .drop_nulls()
     ).unique()
     category_df = category_df.with_row_index("id", offset=1)
 
