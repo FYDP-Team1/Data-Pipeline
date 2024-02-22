@@ -7,6 +7,9 @@ import polars as pl
 INPUT_INGREDIENTS_CSV = Path("data/ingredients-1.csv")
 INPUT_RECIPES_CSV = Path("data/recipes-1.csv")
 PRICELIST_CSV = Path("data/ingredient-pricelist.csv")
+OUTPUT_INGREDIENTS_CSV = Path("data/ingredients-2.csv")
+OUTPUT_INGREDIENT_RECIPE_CSV = Path("data/ingredient-recipe-2.csv")
+OUTPUT_RECIPES_CSV = Path("data/recipes-2.csv")
 
 
 def get_recipe_ingredients(
@@ -156,6 +159,13 @@ def combine_ingredients(
     return ingredients, ingredient_recipe_relations, recipe_cost
 
 
+def save_recipe_cost(input: Path, output: Path, recipe_cost: dict[int, float]):
+    """Update the recipe table with calcuated cost."""
+    pl.read_csv(input).with_columns(
+        pl.col("id").replace(recipe_cost).alias("cost")
+    ).write_csv(output)
+
+
 if __name__ == "__main__":
     recipe_ingredients = get_recipe_ingredients(
         INPUT_RECIPES_CSV, INPUT_INGREDIENTS_CSV
@@ -166,3 +176,7 @@ if __name__ == "__main__":
         recipe_ingredients, product_map
     )
 
+    save_recipe_cost(INPUT_RECIPES_CSV, OUTPUT_RECIPES_CSV, recipe_cost)
+
+    pl.DataFrame(ingredients).write_csv(OUTPUT_INGREDIENTS_CSV)
+    pl.DataFrame(ingredient_recipe).write_csv(OUTPUT_INGREDIENT_RECIPE_CSV)
