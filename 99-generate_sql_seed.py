@@ -4,55 +4,43 @@ from pathlib import Path
 import polars as pl
 import numpy as np
 
-RECIPES_CSV = Path("data/recipes-1.csv")
+RECIPES_CSV = Path("data/recipes-2.csv")
 INGREDIENTS_CSV = Path("data/ingredients-2.csv")
+INGREDIENT_RECIPE_CSV = Path("data/ingredient-recipe-2.csv")
 SQL_FILE = Path("data/seed.sql")
 
 
 def get_recipes_table(recipes: pl.DataFrame) -> dict[str, pl.DataFrame]:
     """Create the recipes table."""
-    df = recipes.select(
-        [
-            pl.col("id"),
-            pl.col("name"),
-            pl.col("description"),
-            pl.col("minutes").alias("cooking_minutes"),
-            # pl.col("cost"),
-            pl.col("n_steps"),
-            pl.col("steps"),
-            pl.col("n_ingredients"),
-            pl.col("calories"),
-            pl.col("total_fat_pdv"),
-            pl.col("sugar_pdv"),
-            pl.col("sodium_pdv"),
-            pl.col("protein_pdv"),
-            pl.col("saturated_fat_pdv"),
-            pl.col("carbohydrate_pdv"),
-            pl.col("cooking_method"),
-            pl.col("course"),
-            pl.col("difficulty"),
-            pl.col("dish"),
-            pl.col("equipment"),
-            pl.col("event"),
-            pl.col("key_ingredient"),
-            pl.col("season"),
-        ]
-    )
-
-    def rand_cost(seed):
-        return round(((30 * np.random.default_rng(seed).random()) + 10), 2)
-
-    # Add dummy cost data
-    df = df.with_columns(
-        pl.col("id")
-        .map_elements(
-            lambda x: rand_cost(x),
-            return_dtype=pl.Float64,
-            strategy="threading",
+    return {
+        "recipes": recipes.select(
+            [
+                pl.col("id"),
+                pl.col("name"),
+                pl.col("description"),
+                pl.col("minutes").alias("cooking_minutes"),
+                pl.col("cost"),
+                pl.col("n_steps"),
+                pl.col("steps"),
+                pl.col("n_ingredients"),
+                pl.col("calories"),
+                pl.col("total_fat_pdv"),
+                pl.col("sugar_pdv"),
+                pl.col("sodium_pdv"),
+                pl.col("protein_pdv"),
+                pl.col("saturated_fat_pdv"),
+                pl.col("carbohydrate_pdv"),
+                pl.col("cooking_method"),
+                pl.col("course"),
+                pl.col("difficulty"),
+                pl.col("dish"),
+                pl.col("equipment"),
+                pl.col("event"),
+                pl.col("key_ingredient"),
+                pl.col("season"),
+            ]
         )
-        .alias("cost")
-    )
-    return {"recipes": df}
+    }
 
 
 def get_category_table(
@@ -152,6 +140,8 @@ if __name__ == "__main__":
             association_id="restriction_id",
         )
     )
+    database.update({"ingredients": pl.read_csv(INGREDIENTS_CSV)})
+    database.update({"recipe_ingredients": pl.read_csv(INGREDIENT_RECIPE_CSV)})
 
     # Write the SQL file
     with SQL_FILE.open("w", encoding="UTF-8") as file:
