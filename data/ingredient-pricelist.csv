@@ -149,7 +149,7 @@ edamame,2.23,12.00,oz
 egg,5.32,16.00,oz
 egg noodles,2.48,12.00,oz
 egg roll wraps,2.73,18.00,oz
-egg white,6.33,32.00,oz
+egg white|egg whites,6.33,32.00,oz
 eggplants,2.20,1.00,each
 elbow macaroni,1.12,16.00,oz
 english cucumber,0.98,1.00,each
@@ -207,7 +207,7 @@ ginger-garlic paste,3.94,4.00,oz
 ginger|fresh ginger|minced ginger|fresh gingerroot|ginger paste|ginger powder|gingerroot,0.92,1.00,each
 goat cheese,3.28,4.00,oz
 golden raisin,4.12,15.00,oz
-g flour,14.99,1.00,lb
+gram flour,14.99,1.00,lb
 grape tomatoes,2.48,10.00,oz
 greek fassolia gigantes,40.00,500.00,g
 greek oregano,9.99,4.00,oz
@@ -233,7 +233,7 @@ hachiya persimmons,44.99,3.00,lb
 halloumi cheese,5.97,7.90,oz
 cooked ham|ham slices,3.77,16.00,oz
 hamburger bun|hamburger buns,3.00,15.00,oz
-hard-boiled eggs,0.81,1.00,each
+hard-boiled eggs|eggs,0.81,1.00,each
 hoagie rolls,3.48,16.00,oz
 hoisin sauce,3.28,20.00,oz
 honey,8.67,24.00,oz
@@ -262,7 +262,7 @@ kasseri cheese,6.38,8.00,oz
 kefalotiri,19.99,1.00,each
 kelp,4.98,1.76,oz
 kernel corn,7.91,9.50,oz
-ketchup,5.63,11.30,oz
+ketchup|catsup,5.63,11.30,oz
 kidney beans,1.36,16.00,oz
 kirby cucumbers,1.97,16.00,oz
 kosher salt,2.36,16.00,oz
@@ -312,7 +312,7 @@ nutmeg,4.62,1.10,oz
 oatmeal,5.68,42.00,oz
 octopus|baby octopus,13.48,8.00,oz
 oil,14.67,128.00,oz
-okra,3.68,1.00,lb
+okra|okara,3.68,1.00,lb
 olive oil|extra virgin olive oil|virgin olive oil|lite olive oil,12.12,32.00,oz
 olive salad,3.98,7.00,oz
 onion|onions,0.67,1.00,each
@@ -352,7 +352,7 @@ plain breadcrumbs,1.34,15.00,oz
 plain flour,1.44,2.00,lb
 plum juice,12.20,48.00,oz
 plum tomato|plum tomatoes,2.38,28.00,oz
-pork|pork butt|pork tenderloin,9.34,2.00,lb
+pork|pork butt|pork tenderloin|lean pork|lean boneless pork,9.34,2.00,lb
 portabella mushroom caps,2.88,6.00,oz
 potato|potatoes,3.47,5.00,lb
 powdered milk,16.99,1.00,lb
