@@ -1,6 +1,7 @@
 import ast
 import json
 from pathlib import Path
+import pint
 
 import polars as pl
 
@@ -10,6 +11,8 @@ PRICELIST_CSV = Path("data/ingredient-pricelist.csv")
 OUTPUT_INGREDIENTS_CSV = Path("data/ingredients-2.csv")
 OUTPUT_INGREDIENT_RECIPE_CSV = Path("data/ingredient-recipe-2.csv")
 OUTPUT_RECIPES_CSV = Path("data/recipes-2.csv")
+
+UREG = pint.UnitRegistry(case_sensitive=False)
 
 
 def get_recipe_ingredients(
@@ -63,15 +66,16 @@ def get_recipe_ingredients(
     return recipe_ingredients
 
 
-def get_ingredient_product_map(file: Path) -> dict[str, dict[str, str | float]]:
+def get_ingredient_product_map(
+    file: Path,
+) -> dict[str, dict[str, float | pint.Quantity]]:
     """Get a mapping of ingredient names to product prices, quantities, and units."""
 
     pricelist = pl.read_csv(file).to_dicts()
 
     return {
         name.strip("'"): {
-            "unit": ingredient["unit"],
-            "quantity": ingredient["quantity"],
+            "quantity": pint.Quantity(ingredient["quantity"], ingredient["unit"]),
             "price": ingredient["price"],
         }
         for ingredient in pricelist
@@ -79,30 +83,41 @@ def get_ingredient_product_map(file: Path) -> dict[str, dict[str, str | float]]:
     }
 
 
-def extract_unit(ingredient: str) -> str:
+def extract_values(ingredient: str, mapping: dict) -> dict[str, str | pint.Quantity]:
     """Extract the unit from an ingredient string."""
     # TODO: individual if statements to match strings?
     return ingredient.split(" ")[0:1]
 
 
 def calculate_recipe_cost(
-    product_map: dict[str, dict[str, str | float]],
-    ingredients: list[dict[str, str | float]],
+    product_map: dict[str, dict[str, float | pint.Quantity]],
+    ingredients: list[pint.Quantity],
 ):
     """Calculate the cost of a recipe."""
     total = 0.0
     for ingredient in ingredients:
-        # TODO
-        # convert units to match the pricelist
-        # calucate the cost of the ingredient
-        # add to the total
-        pass
+        try:
+            ratio = (
+                ingredient["quantity"] / product_map[ingredient["name"]]["quantity"]
+            ).to_reduced_units()
+            if ratio.units.dimensionless:
+                total += ratio.magnitude * product_map[ingredient["name"]]["price"]
+            else:
+                raise pint.errors.DimensionalityError(
+                    ingredient["quantity"].units,
+                    product_map[ingredient["name"]]["quantity"].units,
+                )
+        except pint.errors.DimensionalityError as e:
+            print(
+                f"Dimensionality mismatch: {ingredient['quantity'].units} != {product_map[ingredient['name']]['quantity'].units}\n{e}"
+            )
+
     return total
 
 
 def combine_ingredients(
     recipe_ingredients: list[dict[str, str | list[str] | dict[str, str | float]]],
-    product_map: dict[str, dict[str, str | float]],
+    product_map: dict[str, dict[str, float | pint.Quantity]],
 ) -> tuple[
     list[dict[str, str | int]],
     list[dict[str, str | int | float]],
@@ -114,11 +129,7 @@ def combine_ingredients(
         labels = list(recipe["ingredient_labels_quantities"].keys())
         ingredient_map = {
             name: [
-                {
-                    "label": label,
-                    "quantity": recipe["ingredient_labels_quantities"][label],
-                    "unit": extract_unit(label),
-                }
+                extract_values(label, recipe["ingredient_labels_quantities"])
                 for label in labels
                 if name in label
             ]
@@ -134,7 +145,7 @@ def combine_ingredients(
         recipe_id: calculate_recipe_cost(
             product_map,
             [
-                {"quantity": ingr["quantity"], "unit": ingr["unit"]}
+                ingr["quantity"]
                 for ingr_lst in ingredient_map.values()
                 for ingr in ingr_lst
             ],
@@ -147,7 +158,12 @@ def combine_ingredients(
             "recipe_id": recipe_id,
             "ingredient_id": ingredient_to_id[name],
             "label": label_dict["label"],
-            "quantity": label_dict["quantity"],
+            "quantity": (
+                float(label_dict["quantity"].magnitude)
+                if label_dict["quantity"]
+                else 0.0
+            ),
+            "unit": str(label_dict["quantity"].units) if label_dict["quantity"] else "",
         }
         for recipe_id, ingredient_map in recipe_ingredient_maps.items()
         for name, ingredient_list in ingredient_map.items()
