@@ -2,7 +2,6 @@ from io import TextIOWrapper
 from pathlib import Path
 
 import polars as pl
-import numpy as np
 
 RECIPES_CSV = Path("data/recipes-2.csv")
 INGREDIENTS_CSV = Path("data/ingredients-2.csv")
