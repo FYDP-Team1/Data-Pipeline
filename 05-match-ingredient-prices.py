@@ -263,7 +263,7 @@ def reconsile_incomepatible_units(
 
     # Any remaining cases
     print(
-        f"Unable to reconcile units: '{quantity}'='{quantity.dimensionality}' and '{product_quantity}'='{product_quantity.dimensionality}'"
+        f"Unable to reconcile units for {name}: '{quantity}'='{quantity.dimensionality}' and '{product_quantity}'='{product_quantity.dimensionality}'"
     )
     pass
 
