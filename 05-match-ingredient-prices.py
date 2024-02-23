@@ -76,7 +76,9 @@ def get_ingredient_product_map(
 
     return {
         name.strip("'"): {
-            "quantity": UREG.Quantity(ingredient["quantity"], ingredient["unit"]),
+            "quantity": validate_quantity(
+                f'{ingredient["quantity"]} {ingredient["unit"]}'
+            ),
             "price": ingredient["price"],
         }
         for ingredient in pricelist
@@ -84,33 +86,75 @@ def get_ingredient_product_map(
     }
 
 
+def validate_quantity(qty_str: str) -> pint.Quantity:
+    quantity = UREG.Quantity(qty_str)
+
+    if "gauss" in str(quantity.units):
+        quantity = UREG.Quantity(
+            quantity.magnitude, str(quantity.units).replace("gauss", "gram")
+        )
+
+    if quantity.dimensionless or (
+        len(quantity.dimensionality) == 1
+        and (
+            (
+                "[mass]" in quantity.dimensionality
+                and quantity.dimensionality["[mass]"] == 1
+            )
+            or (
+                "[length]" in quantity.dimensionality
+                and quantity.dimensionality["[length]"] == 3
+            )
+        )
+    ):
+        return quantity
+    else:
+        raise ValueError(f"Invalid units: {quantity.units}")
+
+
+def format_ingredient_label_quantity(
+    label: str, quantity: pint.Quantity | tuple[float, str]
+):
+    if isinstance(quantity, tuple):
+        quantity = UREG.Quantity(quantity[0] if quantity[0] else 1, quantity[1])
+    if isinstance(quantity, pint.Quantity):
+        try:
+            return {
+                "label": label,
+                "quantity": validate_quantity(quantity),
+            }
+        except ValueError as e:
+            print(f"{type(e)}:{e}")
+            return None
+    raise ValueError(f"Quantity not found: {quantity}")
+
+
 def extract_values(ingredient: str, mapping: dict) -> dict[str, str | pint.Quantity]:
     """Extract the unit from an ingredient string."""
-
-    def format_output(quantity: pint.Quantity | tuple[float, str]):
-        if isinstance(quantity, tuple):
-            quantity = UREG.Quantity(quantity[0] if quantity[0] else 1, quantity[1])
-        if isinstance(quantity, pint.Quantity):
-            return {
-                "label": ingredient,
-                "quantity": quantity,
-            }
-        raise ValueError(f"Quantity not found: {quantity}")
-
     # Check for a quantity in parentheses
     if ingredient.startswith("("):
-        qty_str = re.search(r"\((.*?)\)", ingredient).group(1)
+        qty_str = re.search(r"\((.*?\d.*?)\)", ingredient).group(1)
         try:
             qty = UREG.Quantity(qty_str)
-            return format_output(qty)
+            output = format_ingredient_label_quantity(ingredient, qty)
+            if output:
+                return output
         except pint.errors.PintError as e:
             print(f"Quantity not found: {qty_str}\n{type(e)}:{e}\n")
 
-    # Pre-defined units
-    if "to taste" in ingredient:
-        return format_output((mapping[ingredient], "to_taste"))
+    # Check for a unit in the ingredient string
+    words = ingredient.split(" ")
+    for word in words:
+        try:
+            qty = UREG.Quantity(mapping[ingredient], word)
+            output = format_ingredient_label_quantity(ingredient, qty)
+            if output:
+                return output
+        except Exception:
+            continue
 
-    if ingredient in [
+    # Manually-defined units
+    if "to taste" in ingredient or ingredient in [
         "salt and black pepper",
         "salt and pepper",
         "salt",
@@ -118,18 +162,110 @@ def extract_values(ingredient: str, mapping: dict) -> dict[str, str | pint.Quant
         "vegetable oil cooking spray, for pan",
         "italian seasoning",
     ]:
-        return format_output((mapping[ingredient], "to_taste"))
-
-    # Check for a unit in the ingredient string
-    words = ingredient.split(" ")
-    for word in words:
-        try:
-            return format_output(UREG.Quantity(mapping[ingredient], word))
-        except Exception:
-            continue
+        output = format_ingredient_label_quantity(
+            ingredient, (mapping[ingredient], "to_taste")
+        )
+        if output:
+            return output
 
     print(f"Unit not found, assigning 'each': {ingredient}")
-    return format_output((mapping[ingredient], "each"))
+    output = format_ingredient_label_quantity(ingredient, (mapping[ingredient], "each"))
+    if output:
+        return output
+
+
+def reconsile_incomepatible_units(
+    quantity: pint.Quantity, product_quantity: pint.Quantity, name: str
+):
+    if quantity.dimensionless:
+        if (
+            "[length]" in product_quantity.dimensionality
+            and product_quantity.dimensionality["[length]"] == 3
+        ):
+            return UREG.Quantity(
+                2 if quantity.magnitude == 1 else quantity.magnitude,
+                "tablespoon",
+            )
+
+        if "[mass]" in product_quantity.dimensionality:
+            # quantity * unit product quantity
+            return quantity * product_quantity / product_quantity.magnitude
+
+    if (
+        "[length]" in quantity.dimensionality
+        and quantity.dimensionality["[length]"] == 3
+    ):
+        if "[mass]" in product_quantity.dimensionality:
+            # Using water density = 1 g/ml
+            return quantity * UREG.Quantity(1, "gram/milliliter")
+        elif product_quantity.dimensionless:
+            if "lemon" in name:
+                return quantity / UREG.Quantity(3, "tablespoon")
+            if "ginger" in name:
+                return quantity / UREG.Quantity(2, "cup")
+            if "onion" in name:
+                return quantity / UREG.Quantity(1, "cup")
+            if any(
+                v in name
+                for v in [
+                    "sweet pepper",
+                    "bell pepper",
+                    "red pepper",
+                    "green pepper",
+                    "yellow pepper",
+                    "capsicum",
+                ]
+            ):
+                return quantity / UREG.Quantity(1.5, "cup")
+            if "garlic" in name:
+                return quantity / UREG.Quantity(100, "milliliter")
+            if any(
+                v in name
+                for v in [
+                    "lettuce",
+                    "cabbage",
+                ]
+            ):
+                return quantity / UREG.Quantity(100, "milliliter")
+            if "lime" in name:
+                return quantity / UREG.Quantity(2, "tablespoon")
+
+    if "[mass]" in quantity.dimensionality:
+        if (
+            "[length]" in product_quantity.dimensionality
+            and product_quantity.dimensionality["[length]"] == 3
+        ):
+            # Using water density = 1 g/ml
+            return quantity * UREG.Quantity(1, "milliliter/gram")
+        elif product_quantity.dimensionless:
+            if "onion" in name:
+                return quantity / UREG.Quantity(200, "gram")
+            if "baby bok choy" in name:
+                return quantity / UREG.Quantity(50, "gram")
+            if "watermelon" in name:
+                return quantity / UREG.Quantity(9, "kilogram")
+            if "eggplant" in name:
+                return quantity / UREG.Quantity(200, "gram")
+            if "kefalotiri" in name:
+                return quantity / UREG.Quantity(100, "gram")
+            if any(
+                v in name
+                for v in [
+                    "sweet pepper",
+                    "bell pepper",
+                    "red pepper",
+                    "green pepper",
+                    "yellow pepper",
+                    "capsicum",
+                ]
+            ):
+                return quantity / UREG.Quantity(100, "gram")
+
+    # Any remaining cases
+    print(
+        f"Unable to reconcile units: '{quantity}'='{quantity.dimensionality}' and '{product_quantity}'='{product_quantity.dimensionality}'"
+    )
+    pass
 
 
 def calculate_recipe_cost(
@@ -144,8 +280,9 @@ def calculate_recipe_cost(
 
         # Check if the units are NOT of the same type (i.e. mass and volume, or mass and count, etc.)
         if not quantity.is_compatible_with(product["quantity"]):
-            # TODO
-            pass
+            quantity = reconsile_incomepatible_units(
+                quantity, product["quantity"], ingredient["name"]
+            )
 
         try:
             ratio = (quantity / product["quantity"]).to_reduced_units()
@@ -155,8 +292,8 @@ def calculate_recipe_cost(
                 raise pint.errors.DimensionalityError(
                     quantity.u,
                     product["quantity"].u,
-                    quantity.u.dimensionality,
-                    product["quantity"].u.dimensionality,
+                    quantity.dimensionality,
+                    product["quantity"].dimensionality,
                 )
         except pint.errors.DimensionalityError as e:
             print(f"{type(e)}:{e}")
@@ -238,6 +375,7 @@ if __name__ == "__main__":
     UREG.define("pinch = 1/16 * teaspoon = sprinkle")
     UREG.define("dash = 1/8 * teaspoon = to_taste")
     UREG.define("handful = 1/2 * cup")
+    UREG.define("splash = 2 * tablespoon")
 
     recipe_ingredients = get_recipe_ingredients(
         INPUT_RECIPES_CSV, INPUT_INGREDIENTS_CSV
