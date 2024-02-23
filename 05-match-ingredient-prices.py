@@ -1,5 +1,6 @@
 import ast
 import json
+import re
 from pathlib import Path
 import pint
 
@@ -75,7 +76,7 @@ def get_ingredient_product_map(
 
     return {
         name.strip("'"): {
-            "quantity": pint.Quantity(ingredient["quantity"], ingredient["unit"]),
+            "quantity": UREG.Quantity(ingredient["quantity"], ingredient["unit"]),
             "price": ingredient["price"],
         }
         for ingredient in pricelist
@@ -85,32 +86,80 @@ def get_ingredient_product_map(
 
 def extract_values(ingredient: str, mapping: dict) -> dict[str, str | pint.Quantity]:
     """Extract the unit from an ingredient string."""
-    # TODO: individual if statements to match strings?
-    return ingredient.split(" ")[0:1]
+
+    def format_output(quantity: pint.Quantity | tuple[float, str]):
+        if isinstance(quantity, tuple):
+            quantity = UREG.Quantity(quantity[0] if quantity[0] else 1, quantity[1])
+        if isinstance(quantity, pint.Quantity):
+            return {
+                "label": ingredient,
+                "quantity": quantity,
+            }
+        raise ValueError(f"Quantity not found: {quantity}")
+
+    # Check for a quantity in parentheses
+    if ingredient.startswith("("):
+        qty_str = re.search(r"\((.*?)\)", ingredient).group(1)
+        try:
+            qty = UREG.Quantity(qty_str)
+            return format_output(qty)
+        except pint.errors.PintError as e:
+            print(f"Quantity not found: {qty_str}\n{type(e)}:{e}\n")
+
+    # Pre-defined units
+    if "to taste" in ingredient:
+        return format_output((mapping[ingredient], "to_taste"))
+
+    if ingredient in [
+        "salt and black pepper",
+        "salt and pepper",
+        "salt",
+        "pepper",
+        "vegetable oil cooking spray, for pan",
+        "italian seasoning",
+    ]:
+        return format_output((mapping[ingredient], "to_taste"))
+
+    # Check for a unit in the ingredient string
+    words = ingredient.split(" ")
+    for word in words:
+        try:
+            return format_output(UREG.Quantity(mapping[ingredient], word))
+        except Exception:
+            continue
+
+    print(f"Unit not found, assigning 'each': {ingredient}")
+    return format_output((mapping[ingredient], "each"))
 
 
 def calculate_recipe_cost(
     product_map: dict[str, dict[str, float | pint.Quantity]],
-    ingredients: list[pint.Quantity],
+    ingredients: list[dict[str, str | pint.Quantity]],
 ):
     """Calculate the cost of a recipe."""
     total = 0.0
     for ingredient in ingredients:
+        product = product_map.get(ingredient["name"])
+        quantity = ingredient["quantity"]
+
+        # Check if the units are NOT of the same type (i.e. mass and volume, or mass and count, etc.)
+        if not quantity.is_compatible_with(product["quantity"]):
+            # TODO
+            pass
+
         try:
-            ratio = (
-                ingredient["quantity"] / product_map[ingredient["name"]]["quantity"]
-            ).to_reduced_units()
+            ratio = (quantity / product["quantity"]).to_reduced_units()
             if ratio.units.dimensionless:
-                total += ratio.magnitude * product_map[ingredient["name"]]["price"]
+                total += ratio.magnitude * product["price"]
             else:
                 raise pint.errors.DimensionalityError(
-                    ingredient["quantity"].units,
-                    product_map[ingredient["name"]]["quantity"].units,
+                    quantity.u,
+                    product["quantity"].u,
+                    quantity.u.dimensionality,
+                    product["quantity"].u.dimensionality,
                 )
         except pint.errors.DimensionalityError as e:
-            print(
-                f"Dimensionality mismatch: {ingredient['quantity'].units} != {product_map[ingredient['name']]['quantity'].units}\n{e}"
-            )
+            print(f"{type(e)}:{e}")
 
     return total
 
@@ -145,8 +194,8 @@ def combine_ingredients(
         recipe_id: calculate_recipe_cost(
             product_map,
             [
-                ingr["quantity"]
-                for ingr_lst in ingredient_map.values()
+                {"name": ingr_name, "quantity": ingr["quantity"]}
+                for ingr_name, ingr_lst in ingredient_map.items()
                 for ingr in ingr_lst
             ],
         )
@@ -183,6 +232,13 @@ def save_recipe_cost(input: Path, output: Path, recipe_cost: dict[int, float]):
 
 
 if __name__ == "__main__":
+    # Define additional units (estimated)
+    UREG.define("each = count")
+    UREG.define("bunch = 150 * gram")
+    UREG.define("pinch = 1/16 * teaspoon = sprinkle")
+    UREG.define("dash = 1/8 * teaspoon = to_taste")
+    UREG.define("handful = 1/2 * cup")
+
     recipe_ingredients = get_recipe_ingredients(
         INPUT_RECIPES_CSV, INPUT_INGREDIENTS_CSV
     )
