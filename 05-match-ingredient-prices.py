@@ -315,7 +315,7 @@ def calculate_recipe_cost(
         except pint.errors.DimensionalityError as e:
             print(f"{type(e)}:{e}")
 
-    return total
+    return round(total, 2)
 
 
 def combine_ingredients(
