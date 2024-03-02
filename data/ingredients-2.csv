@@ -1,0 +1,762 @@
+id,name
+0,lemon
+1,lemon juice
+2,lemon zest
+3,lemons
+4,fresh lemon juice
+5,"lemon, juice of"
+6,10-inch flour tortillas
+7,6-inch flour tortillas
+8,flour tortillas
+9,soft taco-size flour tortillas
+10,accent seasoning
+11,agar-agar
+12,ahmed brand vermicelli
+13,aji yellow paste
+14,all purpose greek seasoning
+15,anchovies
+16,anchovy paste
+17,apple
+18,apple cider vinegar
+19,arrowroot
+20,artichoke heart
+21,artichoke hearts
+22,artichokes
+23,arugula
+24,asian pears
+25,asian-style dressing
+26,asparagus
+27,avocado
+28,avocados
+29,bacon
+30,baguette
+31,baking potatoes
+32,baking powder
+33,baking soda
+34,balsamic vinegar
+35,bamboo shoot
+36,banana peppers
+37,barbecue sauce
+38,barley
+39,basil
+40,basil leaves
+41,basil pesto
+42,bay leaf
+43,bay leaves
+44,bean sprouts
+45,beans
+46,beau monde seasoning
+47,beef
+48,lean beef
+49,lean ground beef
+50,london broil beef
+51,roast beef
+52,deli roast beef
+53,ground beef
+54,beef consomme
+55,beef stock
+56,beer
+57,bell pepper
+58,bell peppers
+59,black beans
+60,canned black beans
+61,pepper
+62,black pepper
+63,black peppercorns
+64,cracked black pepper
+65,ground black pepper
+66,fresh coarse ground black pepper
+67,fresh ground black pepper
+68,fresh ground pepper
+69,blue cheese
+70,blue cheese dressing
+71,bok choy
+72,baby bok choy
+73,boneless skinless chicken thighs
+74,boneless chicken thighs
+75,boneless pork chops
+76,cooked chicken breast
+77,chicken breast
+78,chicken breasts
+79,boneless chicken breast
+80,skinless chicken breasts
+81,boneless skinless chicken breast
+82,boneless skinless chicken breast halves
+83,boneless skinless chicken breasts
+84,cooked boneless skinless chicken breast
+85,bonito tuna
+86,bread
+87,breadcrumbs
+88,bread flour
+89,broccoli
+90,broccoli floret
+91,broccoli florets
+92,butter
+93,unsalted butter
+94,buttermilk
+95,button mushrooms
+96,cabbage
+97,cabbage kimchi
+98,kim chee
+99,caesar salad dressing
+100,canadian bacon
+101,canned pineapple
+102,canned tuna
+103,cannellini beans
+104,canola oil
+105,capers
+106,cardamom
+107,cardamom pods
+108,whole cardamom pods
+109,ground cardamom
+110,cardamom powder
+111,green cardamoms
+112,carrot
+113,carrots
+114,cashews
+115,cauliflower
+116,cauliflower floret
+117,cayenne
+118,cayenne pepper
+119,celery
+120,celery ribs
+121,charoli nuts
+122,cheese
+123,cheese slices
+124,cheddar cheese
+125,sharp cheddar cheese
+126,shredded cheddar cheese
+127,fat-free cheddar cheese
+128,cheese tortellini
+129,cherry peppers
+130,cherry tomatoes
+131,chicken
+132,cooked chicken
+133,roasting chickens
+134,chicken broth
+135,chicken stock
+136,chicken stock powder
+137,instant chicken broth
+138,low sodium chicken broth
+139,ready-to-serve chicken broth
+140,reduced-sodium fat-free chicken broth
+141,chickpea flour
+142,chickpeas
+143,canned chick-peas
+144,chili
+145,chili powder
+146,chili paste with garlic and ginger
+147,chinese bellflower
+148,chinese noodles
+149,chinese radishes
+150,chinese red vinegar
+151,chinese vegetables
+152,chipotle chile in adobo
+153,chipotle chiles in adobo
+154,chipotle chili mayonnaise
+155,chocolate ice cream
+156,chocolate sprinkles
+157,cider vinegar
+158,cilantro
+159,cinnamon
+160,cinnamon stick
+161,ground cinnamon
+162,cinnamon sugar
+163,citric acid
+164,cloves
+165,ground cloves
+166,coarse salt
+167,cognac
+168,cooked pasta
+169,cooked pork
+170,cooked turkey
+171,cooking oil
+172,cooking spray
+173,vegetable oil cooking spray
+174,pam cooking spray
+175,olive oil flavored cooking spray
+176,coriander
+177,coriander leaves
+178,coriander powder
+179,fresh coriander
+180,fresh coriander leaves
+181,ground coriander
+182,corkscrew macaroni
+183,corn kernel
+184,corn tortilla
+185,corn tortillas
+186,6-inch corn tortillas
+187,cornflour
+188,cornmeal
+189,cornstarch
+190,cottage cheese
+191,2% fat cottage cheese
+192,nonfat cottage cheese
+193,country bread
+194,crabmeat
+195,craisins
+196,cream
+197,fresh cream
+198,heavy cream
+199,whipping cream
+200,whipped cream
+201,cream cheese
+202,cream of chicken soup
+203,crescent rolls
+204,croissants
+205,crouton
+206,crusty bread
+207,cucumber
+208,cumin
+209,cumin powder
+210,cumin seed
+211,cumin seeds
+212,curry leaves
+213,curry powder
+214,dashi
+215,deli turkey
+216,dijon mustard
+217,dill
+218,dill pickle slices
+219,dill weed
+220,dried basil
+221,dried brown lentils
+222,dried chinese mushrooms
+223,dried curry leaves
+224,dried hijiki seaweed
+225,dried marjoram
+226,dried mint flakes
+227,dried oregano
+228,dried parsley
+229,dried rosemary
+230,fresh shiitake mushrooms
+231,dried shiitake mushroom
+232,dried shiitake mushrooms
+233,dried shrimp
+234,dried thyme
+235,dried whole thyme
+236,dry breadcrumbs
+237,dry mustard
+238,dry sherry
+239,dry white wine
+240,duck broth
+241,dumpling wrappers
+242,edamame
+243,egg
+244,egg noodles
+245,egg roll wraps
+246,egg white
+247,egg whites
+248,eggplants
+249,elbow macaroni
+250,english cucumber
+251,english muffins
+252,fennel seeds
+253,feta
+254,feta cheese
+255,fiesta nacho cheese soup
+256,fine egg noodles
+257,fish cake
+258,fish fillets
+259,fish sauce
+260,five-spice powder
+261,flat iron steaks
+262,flat leaf parsley
+263,flat-leaf italian parsley
+264,flour
+265,all-purpose flour
+266,all-purpose white flour
+267,fontina
+268,frank's red hot sauce
+269,frankfurters
+270,french bread
+271,french haricots vert
+272,french onion soup
+273,fresh basil
+274,fresh basil leaf
+275,fresh bean sprout
+276,fresh carrots
+277,fresh chives
+278,fresh cilantro
+279,fresh cilantro stem
+280,fresh dill
+281,fresh dill weed
+282,fresh flat-leaf parsley
+283,fresh garlic
+284,fresh orange juice
+285,fresh oregano
+286,fresh parmesan cheese
+287,fresh parsley
+288,fresh parsley leaves
+289,fresh rosemary
+290,fresh sage
+291,fresh snow peas
+292,fresh spinach
+293,fresh thyme
+294,fresh thyme leave
+295,frozen artichoke hearts
+296,frozen chopped spinach
+297,frozen corn kernels
+298,frozen green pea
+299,frozen peas
+300,frozen spinach
+301,frozen tater tots
+302,frozen whole kernel corn
+303,garam masala
+304,garam masala powder
+305,garbanzo beans
+306,garlic salt
+307,genoa salami
+308,ghee
+309,ginger-garlic paste
+310,ginger
+311,fresh ginger
+312,minced ginger
+313,fresh gingerroot
+314,ginger paste
+315,ginger powder
+316,gingerroot
+317,goat cheese
+318,golden raisin
+319,gram flour
+320,grape tomatoes
+321,greek fassolia gigantes
+322,greek oregano
+323,green cabbage
+324,green chili
+325,green chilies
+326,green lentil
+327,green olives
+328,green onion
+329,green onions
+330,green peas
+331,green pepper
+332,green peppers
+333,green bell pepper
+334,green bell peppers
+335,green tomato
+336,allspice
+337,ground allspice
+338,ground cayenne pepper
+339,ground chuck
+340,ground cumin
+341,ground ginger
+342,ground nutmeg
+343,ground pork
+344,ground turkey
+345,ground veal
+346,guacamole
+347,hachiya persimmons
+348,halloumi cheese
+349,cooked ham
+350,ham slices
+351,hamburger bun
+352,hamburger buns
+353,hard-boiled eggs
+354,eggs
+355,hoagie rolls
+356,hoisin sauce
+357,honey
+358,hot chili powder
+359,hot fudge
+360,hot italian sausage
+361,hot ketchup
+362,hot pepper
+363,hot peppers
+364,hot sauce
+365,hot sausage
+366,iceberg lettuce
+367,instant coffee granules
+368,italian bread
+369,italian dressing
+370,italian parsley
+371,italian seasoning
+372,jalapeno
+373,jalapeno pepper
+374,jalapeno peppers
+375,jalapenos
+376,jalapeno havarti cheese
+377,jelly
+378,jicama
+379,jimmy dean sausage
+380,jumbo pasta shells
+381,kaiser rolls
+382,kalamata olive
+383,kalamata olives
+384,kasseri cheese
+385,kefalotiri
+386,kelp
+387,kernel corn
+388,ketchup
+389,catsup
+390,kidney beans
+391,kirby cucumbers
+392,kosher salt
+393,lard
+394,large raw shrimp
+395,large shrimp
+396,lamb
+397,ground lamb
+398,lean boneless leg of lamb
+399,lean ground lamb
+400,lean ground turkey
+401,lentils
+402,lettuce
+403,lettuce leaf
+404,lettuce leaves
+405,light brown sugar
+406,granulated sugar
+407,confectioners' sugar
+408,sugar
+409,brown sugar
+410,light corn syrup
+411,lime
+412,lime juice
+413,limes
+414,"limes, juice and zest of"
+415,"limes, juice of"
+416,fresh lime juice
+417,fresh lime zest
+418,linguine
+419,low sodium vegetable broth
+420,major grey chutney
+421,mango chutney
+422,mangoes
+423,maple syrup
+424,marinara sauce
+425,marinated artichoke hearts
+426,marsala wine
+427,mashed potatoes
+428,masoor dal
+429,mayonnaise
+430,reduced-fat mayonnaise
+431,low-fat mayonnaise
+432,medium pasta shells
+433,medium shrimp
+434,mexican vegetarian ground meat substitute
+435,milk
+436,low-fat milk
+437,whole milk
+438,garlic
+439,garlic paste
+440,garlic powder
+441,garlic clove
+442,garlic cloves
+443,fresh garlic cloves
+444,minced garlic clove
+445,mint
+446,mint leaf
+447,fresh mint leaves
+448,of fresh mint
+449,mirin
+450,miso
+451,mixed italian herbs
+452,mixed nuts
+453,nuts
+454,mixed salad green
+455,mixed spice
+456,mixed sprouts
+457,monterey jack cheese
+458,monterey jack pepper cheese
+459,reduced-fat monterey jack cheese
+460,mozzarella cheese
+461,fresh mozzarella cheese
+462,smoked mozzarella cheese
+463,mushroom
+464,mushroom pieces
+465,mushrooms
+466,sliced mushrooms
+467,dried mushrooms
+468,fresh mushrooms
+469,mustard seeds
+470,mutton
+471,naan bread
+472,nori
+473,nutella
+474,nutmeg
+475,oatmeal
+476,octopus
+477,baby octopus
+478,oil
+479,okra
+480,okara
+481,olive oil
+482,extra virgin olive oil
+483,virgin olive oil
+484,lite olive oil
+485,olive salad
+486,onion
+487,onions
+488,onion powder
+489,onion seeds
+490,orange rind
+491,orecchiette
+492,oregano
+493,oregano leaves
+494,orzo pasta
+495,oyster mushrooms
+496,oyster sauce
+497,panko breadcrumbs
+498,paprika
+499,parmesan cheese
+500,parmigiano-reggiano cheese
+501,parsley
+502,pastry dough
+503,peanut butter
+504,peanut oil
+505,pears
+506,pecans
+507,phyllo dough
+508,picante sauce
+509,pickled grape leaves
+510,pickles
+511,pickling onions
+512,pillsbury refrigerated crescent dinner rolls
+513,pimientos
+514,pine nuts
+515,pisco
+516,pistachio nut
+517,pita bread
+518,pita bread round
+519,pita bread rounds
+520,pita breads
+521,pita chips
+522,black olives
+523,pitted black olives
+524,pizza dough
+525,pizza sauce
+526,plain breadcrumbs
+527,plain flour
+528,plum juice
+529,plum tomato
+530,plum tomatoes
+531,pork
+532,pork butt
+533,pork tenderloin
+534,lean pork
+535,lean boneless pork
+536,portabella mushroom caps
+537,potato
+538,potatoes
+539,powdered milk
+540,prosciutto
+541,provolone cheese
+542,pumpkin seeds
+543,queso fresco
+544,raisins
+545,ramen noodles
+546,raspberry vinegar
+547,raw shrimp
+548,red bell pepper
+549,sweet red pepper
+550,sweet red peppers
+551,red capsicum
+552,red cabbage
+553,red food coloring
+554,red jalapeno chile
+555,red leaf lettuce
+556,red onion
+557,red chili paste
+558,red chili pepper
+559,red chili pepper flakes
+560,red chili powder
+561,red pepper
+562,red pepper flakes
+563,red pepper paste
+564,red pepper powder
+565,red peppers
+566,ground red pepper
+567,roasted red pepper
+568,crushed red pepper flakes
+569,pepperoncini pepper
+570,red potatoes
+571,baby red potatoes
+572,red wine
+573,red wine vinaigrette
+574,red wine vinegar
+575,reduced-calorie italian dressing
+576,refried beans
+577,low-sodium refried beans
+578,vegetarian refried beans
+579,refrigerated crescent dinner rolls
+580,rice
+581,short-grain rice
+582,basmati rice
+583,cooked basmati rice
+584,cooked brown rice
+585,cooked rice
+586,cooked sushi rice
+587,cooked white rice
+588,long grain and wild rice blend
+589,long grain rice
+590,long-grain white rice
+591,rice flour
+592,rice noodles
+593,rice paper
+594,rice vinegar
+595,rice wine vinegar
+596,ricotta cheese
+597,rolls
+598,romaine lettuce
+599,romaine lettuce leaves
+600,romano cheese
+601,rose water
+602,rosemary
+603,round steaks
+604,rye berries
+605,saffron strand
+606,saffron strands
+607,sage leaves
+608,salad greens
+609,salsa
+610,chunky salsa
+611,salt
+612,sea salt
+613,salt & freshly ground black pepper
+614,salt & pepper
+615,salt and black pepper
+616,salt and pepper
+617,saltine crackers
+618,sambal oelek
+619,scallion
+620,scallions
+621,seasoning
+622,self-rising cornmeal
+623,serrano pepper
+624,sesame seeds
+625,black sesame seed
+626,shallots
+627,sherry wine
+628,shoyu
+629,shrimp
+630,baby shrimp
+631,sifted flour
+632,slivered almonds
+633,small shell pasta
+634,smoked salmon
+635,soba noodles
+636,sour cream
+637,light sour cream
+638,reduced-fat sour cream
+639,sourdough bread
+640,southwestern chicken strips
+641,soy flakes
+642,soy sauce
+643,kikkoman soy sauce
+644,light soy sauce
+645,light soya sauce
+646,low sodium soy sauce
+647,black soy sauce
+648,spaghetti sauce
+649,spinach
+650,baby spinach leaves
+651,spinach leaves
+652,spring onion
+653,spring onions
+654,squid
+655,sunflower seeds
+656,sweet green pepper
+657,sweet italian sausage links
+658,sweet onion
+659,sweet onions
+660,sweet pickles
+661,szechuan peppercorns
+662,tabasco sauce
+663,taco shells
+664,tagliatelle pasta noodles
+665,tahini
+666,tamari
+667,tamari soy sauce
+668,tamarind pulp
+669,tempeh
+670,tequila
+671,teriyaki sauce
+672,thyme
+673,tilapia fillets
+674,sesame oil
+675,dark sesame oil
+676,toasted sesame oil
+677,tofu
+678,firm tofu
+679,tomato paste
+680,tomato puree
+681,tomato sauce
+682,no-salt-added tomato sauce
+683,spicy tomato sauce
+684,whole tomatoes
+685,tomatoes
+686,fresh tomato
+687,crushed tomatoes
+688,diced tomato
+689,diced tomatoes
+690,diced tomatoes with lime and cilantro
+691,tortellini
+692,tortilla
+693,tortillas
+694,tortilla chips
+695,tuna
+696,tuna in water
+697,tuna steak
+698,turmeric
+699,turmeric powder
+700,vanilla
+701,vegetable broth
+702,vegetable stock
+703,vegetable oil
+704,vegetables
+705,stir fry vegetables
+706,vegetarian worcestershire sauce
+707,vinegar
+708,walnuts
+709,wasabi
+710,wasabi paste
+711,water chestnut
+712,water chestnuts
+713,water-packed artichoke hearts
+714,watercress
+715,watermelon
+716,seedless watermelon
+717,wheat berries
+718,wheat bran
+719,wheat gluten
+720,white bread
+721,white breadcrumbs
+722,white onion
+723,white pearl onions
+724,white pepper
+725,white vinegar
+726,white wine
+727,white wine vinegar
+728,whole wheat flour
+729,whole wheat tortillas
+730,wine vinegar
+731,wonton skins
+732,worcestershire sauce
+733,yams
+734,yeast
+735,dry yeast
+736,yellow cornmeal
+737,yellow lentils
+738,yellow mustard
+739,yellow onion
+740,yellow onions
+741,yellow peppers
+742,yellow bell pepper
+743,yellow sweet pepper
+744,yogurt
+745,yoghurt
+746,plain nonfat yogurt
+747,plain yogurt
+748,greek yogurt
+749,low-fat plain yogurt
+750,low-fat yogurt
+751,yogurt starter
+752,yukon gold potato
+753,yukon gold potatoes
+754,zucchini
+755,water
+756,warm water
+757,hot water
+758,cold water
+759,liquid
+760,cloth

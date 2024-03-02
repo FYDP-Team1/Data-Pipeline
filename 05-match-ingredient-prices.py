@@ -229,6 +229,22 @@ def reconsile_incomepatible_units(
                 return quantity / UREG.Quantity(100, "milliliter")
             if "lime" in name:
                 return quantity / UREG.Quantity(2, "tablespoon")
+            if "avocado" in name:
+                return quantity / UREG.Quantity(1, "cup")
+            if any(
+                v in name
+                for v in [
+                    "tortillas",
+                    "corn tortilla",
+                ]
+            ):
+                return quantity / UREG.Quantity(35, "milliliters")
+            if "jalapeno pepper" in name:
+                return quantity / UREG.Quantity(2.5, "tablespoon")
+            if "seedless watermelon" in name:
+                return quantity / UREG.Quantity(11, "cup")
+            
+           
 
     if "[mass]" in quantity.dimensionality:
         if (
@@ -260,6 +276,11 @@ def reconsile_incomepatible_units(
                 ]
             ):
                 return quantity / UREG.Quantity(100, "gram")
+            if "garlic" in name:
+                return quantity / UREG.Quantity(40, "gram")
+            if "lettuce leaf" in name:
+                return quantity / UREG.Quantity(8, "gram")
+            
 
     # Any remaining cases
     print(
