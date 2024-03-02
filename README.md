@@ -1,4 +1,4 @@
-# Simple-Meal Recipe Data Engineering
+# Simple-Meal Recipe Data Pipeline
 
 This repository contains a collection of Python scripts that are used to scrape, clean, and process food recipe data. The data is then used to generate a SQL seed file for initializing a database.
 
