@@ -7,8 +7,8 @@ import yaml
 
 st.set_page_config(layout="wide")
 
-RECIPE_FILE = Path("food-com-recipes/cleaned_recipes.csv")
-TAGS_FILE = Path("food-com-recipes/tags.yaml")
+RECIPE_FILE = Path("../data/recipes-1.csv")
+TAGS_FILE = Path("../food-com-recipes/tags_original.yaml")
 
 
 def load_tags(tags_file: Path) -> dict:

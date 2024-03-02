@@ -117,7 +117,7 @@ if __name__ == "__main__":
     recipes = pl.read_csv(RECIPES_CSV)
 
     # Split the dataframe into individual tables
-    #   Independant tables: recipes, ingredients, cuisines, dietary_restrictions
+    #   Independent tables: recipes, ingredients, cuisines, dietary_restrictions
     #   Dependant tables: recipe_ingredients, recipe_cuisines, recipe_restrictions
     database = {}
     database.update(get_recipes_table(recipes))
@@ -143,7 +143,7 @@ if __name__ == "__main__":
     database.update({"recipe_ingredients": pl.read_csv(INGREDIENT_RECIPE_CSV)})
 
     # Write the SQL file
-    with SQL_FILE.open("w", encoding="UTF-8") as file:
+    with SQL_FILE.open("w", encoding="UTF-8", newline="\n") as file:
         for table, data in database.items():
             file.write(f"-- {table} table\n")
             write_sql(data, table, file)

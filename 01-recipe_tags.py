@@ -60,9 +60,9 @@ for row in data.index:
 
 prog_bar.progress(90, "Appending Missing Tags...")
 # Add remaining saved values to the end of the dataframe
-reamining_saved_tags = [itm for lst in saved_tags.values() for itm in lst]
+remaining_saved_tags = [itm for lst in saved_tags.values() for itm in lst]
 new_data = []
-for tag in reamining_saved_tags:
+for tag in remaining_saved_tags:
     row = {"tags": tag}
     for col in columns:
         if col != "tags":

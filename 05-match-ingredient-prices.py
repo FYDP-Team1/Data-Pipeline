@@ -56,7 +56,7 @@ def get_recipe_ingredients(
     # Convert to list of dictionaries
     recipe_ingredients = recipe_ingredients.to_dicts()
 
-    # Convert ingridients strings to lists and dicts
+    # Convert ingredients strings to lists and dicts
     for recipe in recipe_ingredients:
         temp = recipe["ingredient_names"]
         recipe["ingredient_names"] = ast.literal_eval(temp)
@@ -174,7 +174,7 @@ def extract_values(ingredient: str, mapping: dict) -> dict[str, str | pint.Quant
         return output
 
 
-def reconsile_incomepatible_units(
+def reconcile_incompatible_units(
     quantity: pint.Quantity, product_quantity: pint.Quantity, name: str
 ):
     if quantity.dimensionless:
@@ -297,7 +297,7 @@ def calculate_recipe_cost(
 
         # Check if the units are NOT of the same type (i.e. mass and volume, or mass and count, etc.)
         if not quantity.is_compatible_with(product["quantity"]):
-            quantity = reconsile_incomepatible_units(
+            quantity = reconcile_incompatible_units(
                 quantity, product["quantity"], ingredient["name"]
             )
 
@@ -379,7 +379,7 @@ def combine_ingredients(
 
 
 def save_recipe_cost(input: Path, output: Path, recipe_cost: dict[int, float]):
-    """Update the recipe table with calcuated cost."""
+    """Update the recipe table with calculated cost."""
     recipes = pl.read_csv(input).with_columns(
         pl.col("id").replace(recipe_cost).alias("cost")
     )
