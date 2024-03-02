@@ -168,7 +168,7 @@ def extract_values(ingredient: str, mapping: dict) -> dict[str, str | pint.Quant
         if output:
             return output
 
-    print(f"Unit not found, assigning 'each': {ingredient}")
+    # print(f"Unit not found, assigning 'each': {ingredient}")
     output = format_ingredient_label_quantity(ingredient, (mapping[ingredient], "each"))
     if output:
         return output
@@ -243,8 +243,6 @@ def reconsile_incomepatible_units(
                 return quantity / UREG.Quantity(2.5, "tablespoon")
             if "seedless watermelon" in name:
                 return quantity / UREG.Quantity(11, "cup")
-            
-           
 
     if "[mass]" in quantity.dimensionality:
         if (
@@ -280,13 +278,11 @@ def reconsile_incomepatible_units(
                 return quantity / UREG.Quantity(40, "gram")
             if "lettuce leaf" in name:
                 return quantity / UREG.Quantity(8, "gram")
-            
 
     # Any remaining cases
     print(
         f"Unable to reconcile units for '{name}': '{quantity}'='{quantity.dimensionality}' and '{product_quantity}'='{product_quantity.dimensionality}'"
     )
-    pass
 
 
 def calculate_recipe_cost(
@@ -384,9 +380,17 @@ def combine_ingredients(
 
 def save_recipe_cost(input: Path, output: Path, recipe_cost: dict[int, float]):
     """Update the recipe table with calcuated cost."""
-    pl.read_csv(input).with_columns(
+    recipes = pl.read_csv(input).with_columns(
         pl.col("id").replace(recipe_cost).alias("cost")
-    ).write_csv(output)
+    )
+    recipes.write_csv(output)
+
+    print(
+        f"10 cheapest recipes: {recipes.sort('cost').head(10).select('name', 'id', 'cost', 'ingredients')}"
+    )
+    print(
+        f"10 most expensive recipes: {recipes.sort('cost', descending=True).head(10).select('name', 'id', 'cost', 'ingredients')}"
+    )
 
 
 if __name__ == "__main__":
